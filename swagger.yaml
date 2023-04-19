@@ -4,26 +4,31 @@ info:
   contact: {}
   version: '1.0'
 servers:
-  - url: https://jobs-api-06.herokuapp.com/api/v1
-    variables: {}
+- url: https://jobsapi-575t.onrender.com/api/v1
+  variables: {}
 paths:
   /auth/register:
     post:
       tags:
-        - Auth
-      summary: Register User
-      operationId: RegisterUser
+      - User
+      summary: Register
+      operationId: Register
       parameters: []
       requestBody:
         description: ''
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RegisterUserRequest'
+              allOf:
+              - $ref: '#/components/schemas/RegisterRequest'
+              - example:
+                  name: test4
+                  email: test4@gmail.com
+                  password: test@123
             example:
-              name: bob
-              email: bob@gmail.com
-              password: secret
+              name: test4
+              email: test4@gmail.com
+              password: test@123
         required: true
       responses:
         '200':
@@ -34,19 +39,23 @@ paths:
   /auth/login:
     post:
       tags:
-        - Auth
-      summary: Login User
-      operationId: LoginUser
+      - User
+      summary: Login
+      operationId: Login
       parameters: []
       requestBody:
         description: ''
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginUserRequest'
+              allOf:
+              - $ref: '#/components/schemas/LoginRequest'
+              - example:
+                  email: test@gmail.com
+                  password: test@123
             example:
-              email: susan@gmail.com
-              password: secret
+              email: test@gmail.com
+              password: test@123
         required: true
       responses:
         '200':
@@ -57,7 +66,7 @@ paths:
   /jobs:
     post:
       tags:
-        - Jobs
+      - Job
       summary: Create Job
       operationId: CreateJob
       parameters: []
@@ -66,19 +75,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateJobRequest'
+              allOf:
+              - $ref: '#/components/schemas/CreateJobRequest'
+              - example:
+                  company: random
+                  position: nothing
             example:
-              company: google
-              position: front-end developer
+              company: random
+              position: nothing
         required: true
       responses:
         '200':
           description: ''
           headers: {}
       deprecated: false
+      security:
+      - bearer: []
     get:
       tags:
-        - Jobs
+      - Job
       summary: Get All Jobs
       operationId: GetAllJobs
       parameters: []
@@ -87,6 +102,8 @@ paths:
           description: ''
           headers: {}
       deprecated: false
+      security:
+      - bearer: []
   /jobs/{id}:
     parameters:
       - in: path
@@ -94,22 +111,23 @@ paths:
         schema:
           type: string
         required: true
-        description: The job ID
+        description: The Job ID
     get:
       tags:
-        - Jobs
-      summary: Get Single Job
-      operationId: GetSingleJob
+      - Job
+      summary: Get a Job
+      operationId: GetaJob
       parameters: []
       responses:
         '200':
           description: ''
           headers: {}
       deprecated: false
-
+      security:
+      - bearer: []
     patch:
       tags:
-        - Jobs
+      - Job
       summary: Update Job
       operationId: UpdateJob
       parameters: []
@@ -118,19 +136,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateJobRequest'
+              allOf:
+              - $ref: '#/components/schemas/UpdateJobRequest'
+              - example:
+                  company: tesla
+                  position: sr developer
             example:
-              company: random
-              position: intern
+              company: tesla
+              position: sr developer
         required: true
       responses:
         '200':
           description: ''
           headers: {}
       deprecated: false
+      security:
+      - bearer: []
     delete:
       tags:
-        - Jobs
+      - Job
       summary: Delete Job
       operationId: DeleteJob
       parameters: []
@@ -139,14 +163,16 @@ paths:
           description: ''
           headers: {}
       deprecated: false
+      security:
+      - bearer: []
 components:
   schemas:
-    RegisterUserRequest:
-      title: RegisterUserRequest
+    RegisterRequest:
+      title: RegisterRequest
       required:
-        - name
-        - email
-        - password
+      - name
+      - email
+      - password
       type: object
       properties:
         name:
@@ -156,14 +182,14 @@ components:
         password:
           type: string
       example:
-        name: bob
-        email: bob@gmail.com
-        password: secret
-    LoginUserRequest:
-      title: LoginUserRequest
+        name: test4
+        email: test4@gmail.com
+        password: test@123
+    LoginRequest:
+      title: LoginRequest
       required:
-        - email
-        - password
+      - email
+      - password
       type: object
       properties:
         email:
@@ -171,27 +197,13 @@ components:
         password:
           type: string
       example:
-        email: susan@gmail.com
-        password: secret
+        email: test@gmail.com
+        password: test@123
     CreateJobRequest:
       title: CreateJobRequest
       required:
-        - company
-        - position
-      type: object
-      properties:
-        company:
-          type: string
-        position:
-          type: string
-      example:
-        company: google
-        position: front-end developer
-    UpdateJobRequest:
-      title: UpdateJobRequest
-      required:
-        - company
-        - position
+      - company
+      - position
       type: object
       properties:
         company:
@@ -200,15 +212,26 @@ components:
           type: string
       example:
         company: random
-        position: intern
+        position: nothing
+    UpdateJobRequest:
+      title: UpdateJobRequest
+      required:
+      - company
+      - position
+      type: object
+      properties:
+        company:
+          type: string
+        position:
+          type: string
+      example:
+        company: tesla
+        position: sr developer
   securitySchemes:
-    httpBearer:
+    bearer:
       type: http
       scheme: bearer
-security:
-  - httpBearer: []
+security: []
 tags:
-  - name: Auth
-    description: ''
-  - name: Jobs
-    description: ''
+- name: User
+- name: Job
